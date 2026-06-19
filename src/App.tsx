@@ -7,13 +7,10 @@ import SettingsPage from './components/settings/SettingsPage';
 import AnalyticsPage from './components/pages/AnalyticsPage';
 import ReportsPage from './components/pages/ReportsPage';
 import CustomersPage from './components/pages/CustomersPage';
-
-// ✅ New widget components (with menus, modals, etc.)
 import RevenueTrendWidget from './components/widgets/RevenueTrendWidget';
 import SalesComparisonWidget from './components/widgets/SalesComparisonWidget';
 import CategoryDistributionWidget from './components/widgets/CategoryDistributionWidget';
 import CustomerGrowthWidget from './components/widgets/CustomerGrowthWidget';
-
 import { exportToPDF } from './utils/exportPDF';
 import { Download } from 'lucide-react';
 import { type Page } from './types/page';
@@ -26,7 +23,8 @@ function App() {
     switch (currentPage) {
       case 'dashboard':
         return (
-          <div className="space-y-6">
+          // ✅ Hydration mismatch fix – suppress warning on root
+          <div className="space-y-6" suppressHydrationWarning>
             <div className="flex justify-between items-center flex-wrap gap-3">
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -45,7 +43,6 @@ function App() {
                 <KPICards />
               </div>
               <div id="charts-section" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* ✅ Using widget components – they manage their own data & state */}
                 <RevenueTrendWidget />
                 <SalesComparisonWidget />
                 <CustomerGrowthWidget />
