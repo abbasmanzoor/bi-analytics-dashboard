@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import api from '../services/api';
 import { type DateRange } from '../types/widget.types';
 
 type DataType = 'revenue' | 'sales' | 'category' | 'growth';
 
-// ✅ Strong fallback – guaranteed data
-const FALLBACK_DATA: Record<DataType, any[]> = {
+// ✅ All static data – no API calls
+const STATIC_DATA: Record<DataType, any[]> = {
   revenue: [
     { month: 'Jan', revenue: 32000 },
     { month: 'Feb', revenue: 35000 },
@@ -37,42 +36,18 @@ const FALLBACK_DATA: Record<DataType, any[]> = {
 };
 
 export function useChartData(type: DataType, dateRange?: DateRange) {
-  // ✅ Always start with fallback
-  const [data, setData] = useState<any[]>(FALLBACK_DATA[type]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [data] = useState(STATIC_DATA[type]);
+  const [loading] = useState(false);
+  const [error] = useState(null);
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      let endpoint = '';
-      switch (type) {
-        case 'revenue': endpoint = '/revenue'; break;
-        case 'sales': endpoint = '/sales'; break;
-        case 'category': endpoint = '/category'; break;
-        case 'growth': endpoint = '/growth'; break;
-        default: throw new Error('Invalid type');
-      }
-      const response = await api.get(endpoint);
-      console.log(`✅ API success for ${type}:`, response.data);
-      if (Array.isArray(response.data) && response.data.length > 0) {
-        setData(response.data); // Replace with real data
-      }
-    } catch (err: any) {
-      console.warn(`⚠️ API failed for ${type}, keeping fallback:`, err.message);
-      setError(err.message);
-      // ✅ Keep fallback – do NOT set empty array
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // No fetch – directly return static data
   useEffect(() => {
-    fetchData();
+    // Nothing to do
   }, [type, dateRange]);
 
-  const refetch = () => fetchData();
+  const refetch = () => {
+    // No-op – just for API compatibility
+  };
 
   return { data, loading, error, refetch };
 }

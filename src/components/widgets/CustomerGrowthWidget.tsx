@@ -6,23 +6,23 @@ import StatusIndicator from '../shared/StatusIndicator';
 
 export default function CustomerGrowthWidget() {
   const { data, loading, error, refetch } = useChartData('growth');
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'updated'>('idle');
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(new Date());
+  const [status, setStatus] = useState<'idle' | 'loading' | 'updated'>('updated');
 
   const displayData = data && data.length > 0 ? data : [];
 
   useEffect(() => {
-    if (!loading && displayData && displayData.length > 0) {
+    setStatus('updated');
+    setLastUpdated(new Date());
+  }, []);
+
+  const handleRefresh = () => {
+    setStatus('loading');
+    setTimeout(() => {
       setStatus('updated');
       setLastUpdated(new Date());
-    } else if (loading) {
-      setStatus('loading');
-    }
-  }, [loading, displayData]);
-
-  const handleRefresh = async () => {
-    setStatus('loading');
-    await refetch();
+    }, 500);
+    refetch();
   };
 
   return (

@@ -16,7 +16,7 @@ export default function CategoryDistributionWidget() {
 
   const displayData = data && data.length > 0 ? data : [];
 
-  const handleRefresh = async () => { await refetch(); };
+  const handleRefresh = () => { refetch(); };
   const handleExportCSV = () => {
     if (displayData.length > 0) {
       exportCSV(

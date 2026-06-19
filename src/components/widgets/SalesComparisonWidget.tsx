@@ -11,10 +11,9 @@ export default function SalesComparisonWidget() {
   const [showDetails, setShowDetails] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
 
-  // ✅ Fallback already in hook, but keep safety
   const displayData = data && data.length > 0 ? data : [];
 
-  const handleRefresh = async () => { await refetch(); };
+  const handleRefresh = () => { refetch(); };
   const handleExportCSV = () => {
     if (displayData.length > 0) {
       exportCSV(
