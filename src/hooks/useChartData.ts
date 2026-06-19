@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { type DateRange } from '../types/widget.types';
 
 type DataType = 'revenue' | 'sales' | 'category' | 'growth';
 
-// ✅ All static data – no API calls
+// ✅ Static data – no API
 const STATIC_DATA: Record<DataType, any[]> = {
   revenue: [
     { month: 'Jan', revenue: 32000 },
@@ -40,14 +40,7 @@ export function useChartData(type: DataType, dateRange?: DateRange) {
   const [loading] = useState(false);
   const [error] = useState(null);
 
-  // No fetch – directly return static data
-  useEffect(() => {
-    // Nothing to do
-  }, [type, dateRange]);
-
-  const refetch = () => {
-    // No-op – just for API compatibility
-  };
+  const refetch = () => {};
 
   return { data, loading, error, refetch };
 }

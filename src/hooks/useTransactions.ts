@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { type Transaction } from '../store/transactionStore';
 
-// ✅ Static transactions – no API call
+// ✅ Static transactions
 const STATIC_TRANSACTIONS: Transaction[] = [
   { id: 1, customerName: 'Ahmed Enterprises', revenue: 125000, orders: 12, status: 'Paid', region: 'Karachi' },
   { id: 2, customerName: 'Fatima Traders', revenue: 85000, orders: 8, status: 'Paid', region: 'Lahore' },
@@ -16,10 +16,10 @@ const STATIC_TRANSACTIONS: Transaction[] = [
 ];
 
 export const useTransactions = () => {
-  const [data] = useState(STATIC_TRANSACTIONS);
+  const [transactions] = useState(STATIC_TRANSACTIONS);
   const [isLoading] = useState(false);
   const [error] = useState(null);
   const [isError] = useState(false);
 
-  return { transactions: data, isLoading, error, isError };
+  return { transactions, isLoading, error, isError };
 };

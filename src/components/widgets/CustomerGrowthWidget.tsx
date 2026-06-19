@@ -9,8 +9,6 @@ export default function CustomerGrowthWidget() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(new Date());
   const [status, setStatus] = useState<'idle' | 'loading' | 'updated'>('updated');
 
-  const displayData = data && data.length > 0 ? data : [];
-
   useEffect(() => {
     setStatus('updated');
     setLastUpdated(new Date());
@@ -35,7 +33,7 @@ export default function CustomerGrowthWidget() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
         </div>
       ) : (
-        <CustomerGrowthChart data={displayData} />
+        <CustomerGrowthChart data={data} />
       )}
     </WidgetCard>
   );
