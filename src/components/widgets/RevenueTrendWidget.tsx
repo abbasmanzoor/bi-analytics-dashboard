@@ -6,29 +6,16 @@ import Modal from '../shared/Modal';
 import { exportCSV } from '../../utils/exportCSV';
 import { Eye, RefreshCw, Download, Maximize, Calendar } from 'lucide-react';
 
-// ✅ Fallback static data (if API fails)
-const FALLBACK_DATA = [
-  { month: 'Jan', revenue: 32000 },
-  { month: 'Feb', revenue: 35000 },
-  { month: 'Mar', revenue: 38000 },
-  { month: 'Apr', revenue: 42000 },
-  { month: 'May', revenue: 48000 },
-  { month: 'Jun', revenue: 54239 },
-];
-
 export default function RevenueTrendWidget() {
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '6m' | '12m'>('30d');
   const { data, loading, error, refetch } = useChartData('revenue', dateRange);
   const [showDetails, setShowDetails] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
 
-  // ✅ Use fallback if data is empty
-  const displayData = (data && data.length > 0) ? data : FALLBACK_DATA;
+  // ✅ Always use data (fallback is already provided by hook)
+  const displayData = data && data.length > 0 ? data : [];
 
-  const handleRefresh = async () => {
-    await refetch();
-  };
-
+  const handleRefresh = async () => { await refetch(); };
   const handleExportCSV = () => {
     if (displayData.length > 0) {
       exportCSV(
@@ -53,12 +40,7 @@ export default function RevenueTrendWidget() {
     { label: 'Last 12 Months', icon: <Calendar size={16} />, onClick: () => setDateRange('12m') },
   ];
 
-  if (error) {
-    // If error, still show fallback data instead of error
-    console.warn('Revenue API error, using fallback data:', error);
-    // We'll still render with fallback
-  }
-
+  // ✅ No error check – always render chart with fallback data
   return (
     <>
       <WidgetCard title="Revenue Trend" menuOptions={menuOptions}>
