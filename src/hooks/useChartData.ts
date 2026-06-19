@@ -4,7 +4,7 @@ import { type DateRange } from '../types/widget.types';
 
 type DataType = 'revenue' | 'sales' | 'category' | 'growth';
 
-// ✅ Fallback data for all endpoints
+// ✅ Strong fallback – guaranteed data
 const FALLBACK_DATA: Record<DataType, any[]> = {
   revenue: [
     { month: 'Jan', revenue: 32000 },
@@ -37,9 +37,9 @@ const FALLBACK_DATA: Record<DataType, any[]> = {
 };
 
 export function useChartData(type: DataType, dateRange?: DateRange) {
-  // ✅ Always start with fallback data
+  // ✅ Always start with fallback
   const [data, setData] = useState<any[]>(FALLBACK_DATA[type]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
@@ -48,34 +48,21 @@ export function useChartData(type: DataType, dateRange?: DateRange) {
     try {
       let endpoint = '';
       switch (type) {
-        case 'revenue':
-          endpoint = '/revenue';
-          break;
-        case 'sales':
-          endpoint = '/sales';
-          break;
-        case 'category':
-          endpoint = '/category';
-          break;
-        case 'growth':
-          endpoint = '/growth';
-          break;
-        default:
-          throw new Error('Invalid type');
+        case 'revenue': endpoint = '/revenue'; break;
+        case 'sales': endpoint = '/sales'; break;
+        case 'category': endpoint = '/category'; break;
+        case 'growth': endpoint = '/growth'; break;
+        default: throw new Error('Invalid type');
       }
       const response = await api.get(endpoint);
-      console.log(`✅ Data fetched for ${type}:`, response.data);
-
+      console.log(`✅ API success for ${type}:`, response.data);
       if (Array.isArray(response.data) && response.data.length > 0) {
-        setData(response.data); // API data se replace karein
-      } else {
-        console.warn(`No API data for ${type}, keeping fallback`);
-        // fallback already set, so do nothing
+        setData(response.data); // Replace with real data
       }
     } catch (err: any) {
-      console.error(`❌ Error fetching ${type}, keeping fallback:`, err);
-      setError(err.message || 'Failed to fetch data');
-      // ✅ Keep fallback data – do NOT set empty array
+      console.warn(`⚠️ API failed for ${type}, keeping fallback:`, err.message);
+      setError(err.message);
+      // ✅ Keep fallback – do NOT set empty array
     } finally {
       setLoading(false);
     }

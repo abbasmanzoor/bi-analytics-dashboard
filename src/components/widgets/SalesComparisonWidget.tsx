@@ -6,21 +6,13 @@ import Modal from '../shared/Modal';
 import { exportCSV } from '../../utils/exportCSV';
 import { Eye, RefreshCw, Download, Maximize, BarChart2 } from 'lucide-react';
 
-// ✅ LOCAL FALLBACK – guaranteed to show if API fails
-const FALLBACK_DATA = [
-  { category: 'Electronics', sales: 18500 },
-  { category: 'Clothing', sales: 12500 },
-  { category: 'Home & Living', sales: 9800 },
-  { category: 'Books', sales: 4200 },
-];
-
 export default function SalesComparisonWidget() {
   const { data, loading, error, refetch } = useChartData('sales');
   const [showDetails, setShowDetails] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
 
-  // ✅ Always use data if available, else fallback
-  const displayData = (data && data.length > 0) ? data : FALLBACK_DATA;
+  // ✅ Fallback already in hook, but keep safety
+  const displayData = data && data.length > 0 ? data : [];
 
   const handleRefresh = async () => { await refetch(); };
   const handleExportCSV = () => {
@@ -44,7 +36,6 @@ export default function SalesComparisonWidget() {
     { label: 'Compare Periods', icon: <BarChart2 size={16} />, onClick: () => alert('Compare current vs previous month') },
   ];
 
-  // ✅ No error check – always render chart
   return (
     <>
       <WidgetCard title="Sales Comparison" menuOptions={menuOptions}>

@@ -9,10 +9,11 @@ import { Eye, RefreshCw, Download, Maximize, Calendar } from 'lucide-react';
 export default function RevenueTrendWidget() {
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '6m' | '12m'>('30d');
   const { data, loading, error, refetch } = useChartData('revenue', dateRange);
+
   const [showDetails, setShowDetails] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
 
-  // ✅ Always use data (hook already has fallback)
+  // ✅ Data already guaranteed
   const displayData = data && data.length > 0 ? data : [];
 
   const handleRefresh = async () => { await refetch(); };
@@ -40,7 +41,6 @@ export default function RevenueTrendWidget() {
     { label: 'Last 12 Months', icon: <Calendar size={16} />, onClick: () => setDateRange('12m') },
   ];
 
-  // ✅ No error check – always render chart
   return (
     <>
       <WidgetCard title="Revenue Trend" menuOptions={menuOptions}>
