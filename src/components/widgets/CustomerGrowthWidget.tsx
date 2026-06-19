@@ -9,21 +9,23 @@ export default function CustomerGrowthWidget() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [status, setStatus] = useState<'idle' | 'loading' | 'updated'>('idle');
 
+  const displayData = data && data.length > 0 ? data : [];
+
   useEffect(() => {
-    if (!loading && data) {
+    if (!loading && displayData && displayData.length > 0) {
       setStatus('updated');
       setLastUpdated(new Date());
     } else if (loading) {
       setStatus('loading');
+    } else if (!loading && displayData && displayData.length === 0) {
+      setStatus('idle');
     }
-  }, [loading, data]);
+  }, [loading, displayData]);
 
   const handleRefresh = async () => {
     setStatus('loading');
     await refetch();
   };
-
-  if (error) return <WidgetCard title="Customer Growth" status={<span className="text-red-500">Error</span>}><div>Error</div></WidgetCard>;
 
   return (
     <WidgetCard
@@ -31,9 +33,11 @@ export default function CustomerGrowthWidget() {
       status={<StatusIndicator status={status} lastUpdated={lastUpdated} onRefresh={handleRefresh} />}
     >
       {loading ? (
-        <div className="flex justify-center h-64"><div className="animate-spin h-8 w-8 border-b-2 border-primary-500" /></div>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
+        </div>
       ) : (
-        <CustomerGrowthChart data={data} />
+        <CustomerGrowthChart data={displayData} />
       )}
     </WidgetCard>
   );

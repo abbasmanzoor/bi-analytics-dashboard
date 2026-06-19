@@ -14,11 +14,13 @@ export default function CategoryDistributionWidget() {
   const [fullscreen, setFullscreen] = useState(false);
   const [chartType, setChartType] = useState<ChartType>('donut');
 
+  const displayData = data && data.length > 0 ? data : [];
+
   const handleRefresh = async () => { await refetch(); };
   const handleExportCSV = () => {
-    if (data) {
+    if (displayData.length > 0) {
       exportCSV(
-        data,
+        displayData,
         [
           { label: 'Category', key: 'name' },
           { label: 'Value', key: 'value' },
@@ -38,14 +40,6 @@ export default function CategoryDistributionWidget() {
     { label: 'Bar Chart', icon: <BarChart3 size={16} />, onClick: () => setChartType('bar') },
   ];
 
-  if (error) {
-    return (
-      <WidgetCard title="Category Distribution" menuOptions={menuOptions}>
-        <div className="text-red-500 p-4 text-center">Error loading data.</div>
-      </WidgetCard>
-    );
-  }
-
   return (
     <>
       <WidgetCard title="Category Distribution" menuOptions={menuOptions}>
@@ -54,7 +48,7 @@ export default function CategoryDistributionWidget() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
           </div>
         ) : (
-          <CategoryDistributionChart data={data} chartType={chartType} />
+          <CategoryDistributionChart data={displayData} chartType={chartType} />
         )}
       </WidgetCard>
 
@@ -63,15 +57,15 @@ export default function CategoryDistributionWidget() {
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-gray-200 dark:border-gray-700">
-                <th className="py-2">Category</th>
-                <th className="py-2">Value (%)</th>
+                <th className="py-2 text-sm font-semibold">Category</th>
+                <th className="py-2 text-sm font-semibold">Value (%)</th>
               </tr>
             </thead>
             <tbody>
-              {data.map((row: { name: string; value: number }) => (
+              {displayData.map((row: any) => (
                 <tr key={row.name} className="border-b border-gray-100 dark:border-gray-800">
-                  <td className="py-2">{row.name}</td>
-                  <td className="py-2">{row.value}%</td>
+                  <td className="py-2 text-sm">{row.name}</td>
+                  <td className="py-2 text-sm">{row.value}%</td>
                 </tr>
               ))}
             </tbody>
@@ -79,9 +73,9 @@ export default function CategoryDistributionWidget() {
         </div>
       </Modal>
 
-      <Modal isOpen={fullscreen} onClose={() => setFullscreen(false)} title="Fullscreen">
+      <Modal isOpen={fullscreen} onClose={() => setFullscreen(false)} title="Category Distribution (Fullscreen)">
         <div className="h-[70vh]">
-          <CategoryDistributionChart data={data} chartType={chartType} />
+          <CategoryDistributionChart data={displayData} chartType={chartType} />
         </div>
       </Modal>
     </>

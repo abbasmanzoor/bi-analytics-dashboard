@@ -11,11 +11,13 @@ export default function SalesComparisonWidget() {
   const [showDetails, setShowDetails] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
 
+  const displayData = data && data.length > 0 ? data : [];
+
   const handleRefresh = async () => { await refetch(); };
   const handleExportCSV = () => {
-    if (data) {
+    if (displayData.length > 0) {
       exportCSV(
-        data,
+        displayData,
         [
           { label: 'Category', key: 'category' },
           { label: 'Sales', key: 'sales' },
@@ -33,21 +35,15 @@ export default function SalesComparisonWidget() {
     { label: 'Compare Periods', icon: <BarChart2 size={16} />, onClick: () => alert('Compare current vs previous month') },
   ];
 
-  if (error) {
-    return (
-      <WidgetCard title="Sales Comparison" menuOptions={menuOptions}>
-        <div className="text-red-500">Error loading data.</div>
-      </WidgetCard>
-    );
-  }
-
   return (
     <>
       <WidgetCard title="Sales Comparison" menuOptions={menuOptions}>
         {loading ? (
-          <div className="flex justify-center h-64"><div className="animate-spin h-8 w-8 border-b-2 border-primary-500" /></div>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
+          </div>
         ) : (
-          <SalesComparisonChart data={data} />
+          <SalesComparisonChart data={displayData} />
         )}
       </WidgetCard>
 
@@ -55,16 +51,16 @@ export default function SalesComparisonWidget() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b">
-                <th className="py-2">Category</th>
-                <th className="py-2">Sales</th>
+              <tr className="border-b border-gray-200 dark:border-gray-700">
+                <th className="py-2 text-sm font-semibold">Category</th>
+                <th className="py-2 text-sm font-semibold">Sales</th>
               </tr>
             </thead>
             <tbody>
-              {data.map((row: { category: string; sales: number }) => (
+              {displayData.map((row: any) => (
                 <tr key={row.category} className="border-b border-gray-100 dark:border-gray-800">
-                  <td className="py-2">{row.category}</td>
-                  <td className="py-2">${row.sales.toLocaleString()}</td>
+                  <td className="py-2 text-sm">{row.category}</td>
+                  <td className="py-2 text-sm">${row.sales.toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
@@ -74,7 +70,7 @@ export default function SalesComparisonWidget() {
 
       <Modal isOpen={fullscreen} onClose={() => setFullscreen(false)} title="Sales Comparison (Fullscreen)">
         <div className="h-[70vh]">
-          <SalesComparisonChart data={data} />
+          <SalesComparisonChart data={displayData} />
         </div>
       </Modal>
     </>
