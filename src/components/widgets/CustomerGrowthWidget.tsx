@@ -17,8 +17,6 @@ export default function CustomerGrowthWidget() {
       setLastUpdated(new Date());
     } else if (loading) {
       setStatus('loading');
-    } else if (!loading && displayData && displayData.length === 0) {
-      setStatus('idle');
     }
   }, [loading, displayData]);
 

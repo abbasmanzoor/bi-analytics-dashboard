@@ -12,7 +12,7 @@ export default function RevenueTrendWidget() {
   const [showDetails, setShowDetails] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
 
-  // ✅ Always use data (fallback is already provided by hook)
+  // ✅ Always use data (hook already has fallback)
   const displayData = data && data.length > 0 ? data : [];
 
   const handleRefresh = async () => { await refetch(); };
@@ -40,7 +40,7 @@ export default function RevenueTrendWidget() {
     { label: 'Last 12 Months', icon: <Calendar size={16} />, onClick: () => setDateRange('12m') },
   ];
 
-  // ✅ No error check – always render chart with fallback data
+  // ✅ No error check – always render chart
   return (
     <>
       <WidgetCard title="Revenue Trend" menuOptions={menuOptions}>
