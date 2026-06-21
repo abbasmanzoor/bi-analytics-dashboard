@@ -15,7 +15,7 @@ const FALLBACK_DATA = [
 ];
 
 export default function CustomerGrowthWidget() {
-  const { data, loading, error, refetch } = useChartData('growth');
+  const { data, loading, refetch } = useChartData('growth');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [status, setStatus] = useState<'idle' | 'loading' | 'updated'>('idle');
 

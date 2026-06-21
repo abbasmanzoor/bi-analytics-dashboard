@@ -15,7 +15,7 @@ const FALLBACK_DATA = [
 ];
 
 export default function SalesComparisonWidget() {
-  const { data, loading, error, refetch } = useChartData('sales');
+  const { data, loading,  refetch } = useChartData('sales');
   const [showDetails, setShowDetails] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
 

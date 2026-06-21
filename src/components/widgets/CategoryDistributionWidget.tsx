@@ -17,7 +17,7 @@ const FALLBACK_DATA = [
 ];
 
 export default function CategoryDistributionWidget() {
-  const { data, loading, error, refetch } = useChartData('category');
+  const { data, loading, refetch } = useChartData('category');
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [chartType, setChartType] = useState<ChartType>('donut');
