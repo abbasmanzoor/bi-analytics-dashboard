@@ -8,15 +8,23 @@ import { Eye, RefreshCw, Download, Maximize, PieChart, BarChart3, Donut } from '
 
 type ChartType = 'pie' | 'donut' | 'bar';
 
+// ✅ LOCAL FALLBACK
+const FALLBACK_DATA = [
+  { name: 'Solvency', value: 45 },
+  { name: 'Revenue', value: 30 },
+  { name: 'Handles', value: 15 },
+  { name: 'Other', value: 10 },
+];
+
 export default function CategoryDistributionWidget() {
   const { data, loading, error, refetch } = useChartData('category');
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [chartType, setChartType] = useState<ChartType>('donut');
 
-  const displayData = data && data.length > 0 ? data : [];
+  const displayData = (data && data.length > 0) ? data : FALLBACK_DATA;
 
-  const handleRefresh = () => { refetch(); };
+  const handleRefresh = async () => { await refetch(); };
   const handleExportCSV = () => {
     if (displayData.length > 0) {
       exportCSV(

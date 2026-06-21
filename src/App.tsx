@@ -1,4 +1,5 @@
-import { useState } from 'react';
+// src/App.tsx
+import { useState, useEffect } from 'react'; // ✅ useEffect import karo
 import { useTranslation } from 'react-i18next';
 import MainLayout from './components/layout/MainLayout';
 import KPICards from './components/dashboard/KPICards';
@@ -14,16 +15,21 @@ import CustomerGrowthWidget from './components/widgets/CustomerGrowthWidget';
 import { exportToPDF } from './utils/exportPDF';
 import { Download } from 'lucide-react';
 import { type Page } from './types/page';
+import { initializeLocalStorage } from './services/localStorageService'; // ✅ Naya import
 
 function App() {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
 
+  // ✅ App start hotey hi localStorage ko seed kar do (sirf ek baar)
+  useEffect(() => {
+    initializeLocalStorage();
+  }, []);
+
   const renderContent = () => {
     switch (currentPage) {
       case 'dashboard':
         return (
-          // ✅ Hydration mismatch fix – suppress warning on root
           <div className="space-y-6" suppressHydrationWarning>
             <div className="flex justify-between items-center flex-wrap gap-3">
               <div>
